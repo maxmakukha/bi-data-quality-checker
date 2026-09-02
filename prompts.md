@@ -372,3 +372,104 @@ The output was readable and matched the validation results.
 
 This verification also confirmed that the complete internal flow
 `loader → validator → report` works correctly.
+
+---
+
+## Prompt 5 — CLI Integration
+
+**AI Tool:** GitHub Copilot in VS Code
+
+**Goal:** Connect the loader, validator, and report components into a simple command-line interface.
+
+### Prompt
+
+Review `README.md`, `src/loader.py`, `src/validator.py`, `src/report.py`, and the current `main.py`.
+
+Update only `main.py`.
+
+Requirements:
+
+- use Python standard library only;
+- use `argparse`;
+- accept the CSV file path as a positional argument;
+- add `--key` as a required argument for the key column;
+- add `--required` as an optional argument accepting zero or more required column names;
+- call `load_csv()`;
+- call `validate_data()`;
+- call `format_report()`;
+- print the final formatted report;
+- catch `FileNotFoundError` and `ValueError`;
+- print a clear error message for expected user input errors;
+- keep the implementation small and easy to explain;
+- do not add new modules;
+- do not modify loader.py, validator.py, or report.py.
+
+Before making changes, briefly explain your implementation plan.
+
+### AI Response Summary
+
+GitHub Copilot updated `main.py` and connected the existing project components into a command-line interface.
+
+The implementation:
+
+- uses `argparse` for command-line arguments;
+- accepts the CSV path as a positional argument;
+- requires the `--key` argument;
+- supports zero or more columns through `--required`;
+- connects `load_csv()`, `validate_data()`, and `format_report()`;
+- prints the final validation report;
+- handles expected `FileNotFoundError` and `ValueError` exceptions;
+- writes error messages to `stderr`;
+- exits with a non-zero status code when validation cannot be performed.
+
+### Human Review and Decision
+
+**Accepted with no code changes.**
+
+The CLI implementation follows the requested scope and correctly connects the
+three existing components.
+
+The use of `sys.stderr` for error messages and a non-zero exit code was accepted
+because it clearly separates successful output from expected user errors.
+
+No unnecessary dependencies or additional modules were introduced.
+
+### Manual Verification
+
+The command-line interface was manually verified end-to-end.
+
+**Bad dataset:**
+
+The CLI correctly produced a report with:
+
+- 5 total rows;
+- 1 missing key value;
+- duplicate key value `2`;
+- 1 missing value for `name`;
+- 1 missing value for `email`.
+
+**Good dataset:**
+
+The CLI correctly produced a report with:
+
+- 4 total rows;
+- 0 missing key values;
+- no duplicate key values;
+- 0 missing values for `name`;
+- 0 missing values for `email`.
+
+**Missing file:**
+
+Using a non-existent CSV path produced:
+
+`Error: CSV file not found: data/not_exists.csv`
+
+**Missing key column:**
+
+Using `wrong_id` as the key column produced:
+
+`Error: Key column not found: wrong_id`
+
+The complete workflow
+`CLI → loader → validator → report`
+worked as expected.
