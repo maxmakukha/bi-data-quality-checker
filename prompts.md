@@ -164,3 +164,115 @@ the `src/data` directory instead of the project-level `data` directory.
 
 The clear `FileNotFoundError` helped identify the incorrect file location.
 After moving the files to the correct directory, the loader worked as expected.
+
+---
+
+## Prompt 3 — Data Quality Validator Implementation
+
+**AI Tool:** GitHub Copilot in VS Code
+
+**Goal:** Implement the core data quality validation logic.
+
+### Prompt
+
+Review `README.md`, `src/loader.py`, and the current project structure before making changes.
+
+Implement only the data validation component.
+
+Create `src/validator.py`.
+
+Requirements:
+
+- create a function `validate_data(columns, rows, key_column, required_columns)`;
+- verify that `key_column` exists in `columns`;
+- verify that every column in `required_columns` exists in `columns`;
+- count total rows;
+- count missing values in the key column;
+- detect duplicate non-empty key values;
+- count missing values separately for each required column;
+- treat empty strings and whitespace-only strings as missing values;
+- do not modify the input rows;
+- do not print output inside the validator;
+- return validation results as a simple Python dictionary;
+- keep the implementation small and easy to explain;
+- use only the Python standard library.
+
+If the key column does not exist, raise a clear `ValueError`.
+
+If a required column does not exist, raise a clear `ValueError`.
+
+Do not implement report formatting, CLI arguments, or tests yet.
+
+Before making changes, briefly explain your implementation plan.
+
+### AI Response Summary
+
+GitHub Copilot created `src/validator.py` with a focused validation function.
+
+The implementation:
+
+- validates that the key column exists;
+- validates that all required columns exist;
+- counts total rows;
+- treats `None`, empty strings, and whitespace-only strings as missing;
+- counts missing key values;
+- detects duplicate non-empty key values;
+- counts missing values separately for each required column;
+- returns results as a plain Python dictionary;
+- does not print output or modify input rows.
+
+### Human Review and Decision
+
+**Accepted with no code changes.**
+
+The duplicate detection logic was reviewed carefully.
+
+The implementation ignores missing key values before duplicate detection, which
+matches the project requirement that only non-empty key values are checked for
+duplicates.
+
+Duplicate values are stored in a set, so a duplicated key is reported once even
+if it appears more than two times.
+
+The returned dictionary is simple, readable, and suitable for both testing and
+future report formatting.
+
+No unnecessary dependencies or validation responsibilities were added.
+
+### Manual Verification
+
+The AI-generated validator was manually verified before committing the code.
+
+**Good dataset:**
+
+`validate_data(...)` returned:
+
+- `total_rows = 4`
+- `key_missing_count = 0`
+- no duplicate key values
+- `name` missing count = 0
+- `email` missing count = 0
+
+**Bad dataset:**
+
+`validate_data(...)` returned:
+
+- `total_rows = 5`
+- `key_missing_count = 1`
+- duplicate key value = `2`
+- `name` missing count = 1
+- `email` missing count = 1
+
+**Missing key column:**
+
+Using `wrong_id` as the key column raised:
+
+`ValueError: Key column not found: wrong_id`
+
+**Missing required column:**
+
+Using `phone` as a required column raised:
+
+`ValueError: Required column not found: phone`
+
+The observed results matched the expected validation behavior.
