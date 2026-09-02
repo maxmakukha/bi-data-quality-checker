@@ -1,4 +1,4 @@
-# bi-data-quality-checker# BI Data Quality Checker
+## BI Data Quality Checker
 
 A small Python CLI project for validating basic CSV data quality.
 

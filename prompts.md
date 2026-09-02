@@ -473,3 +473,135 @@ Using `wrong_id` as the key column produced:
 The complete workflow
 `CLI → loader → validator → report`
 worked as expected.
+
+---
+
+## Prompt 6 — Automated Tests
+
+**AI Tool:** GitHub Copilot in VS Code
+
+**Goal:** Add automated tests for the implemented data quality feature.
+
+### Prompt
+
+Review `README.md`, `src/loader.py`, `src/validator.py`, `src/report.py`, and `main.py`.
+
+Create automated tests using `pytest`.
+
+Create the following files:
+
+- `tests/test_loader.py`
+- `tests/test_validator.py`
+- `tests/test_report.py`
+
+Requirements:
+
+### Loader tests
+- verify that a valid CSV file is loaded correctly;
+- verify that column names are returned;
+- verify that rows are returned as dictionaries;
+- verify that a missing file raises `FileNotFoundError`.
+
+### Validator tests
+- verify a clean dataset returns zero missing and duplicate findings;
+- verify missing key values are counted;
+- verify duplicate non-empty key values are detected;
+- verify missing required values are counted separately by column;
+- verify whitespace-only values are treated as missing;
+- verify a missing key column raises `ValueError`;
+- verify a missing required column raises `ValueError`.
+
+### Report tests
+- verify the report contains total rows;
+- verify duplicate values are displayed;
+- verify `None` is displayed when there are no duplicate values;
+- verify required-column missing counts are included.
+
+Constraints:
+- use `pytest`;
+- keep tests small and readable;
+- do not test implementation details that are not part of the feature behavior;
+- do not modify production code;
+- do not add external dependencies other than pytest;
+- do not add CLI tests yet.
+
+Before making changes, briefly explain the test plan.
+
+### AI Response Summary
+
+GitHub Copilot generated automated pytest tests for the loader,
+validator, and report components.
+
+The generated test suite contained 30 tests covering:
+
+- CSV loading;
+- missing files;
+- validation of clean and problematic datasets;
+- missing and duplicate key values;
+- required-column validation;
+- whitespace and None values;
+- report formatting.
+
+### Test Execution and Human Review
+
+The initial AI-generated test suite was executed with:
+
+`python3 -m pytest -v`
+
+Initial result:
+
+- 30 tests collected;
+- 28 tests passed;
+- 2 tests failed.
+
+The failures were reviewed manually and both were caused by incorrect
+expectations in the AI-generated tests rather than defects in the
+production code.
+
+**Issue 1 — Report duplicate ordering**
+
+Copilot created a report test with unsorted duplicate values but expected
+the report formatter to sort them.
+
+This contradicted the component design: `validator.py` is responsible for
+sorting duplicate values, while `report.py` only formats the provided
+validation results.
+
+The test was changed to verify that the report preserves the provided order.
+
+**Issue 2 — Required-column missing count**
+
+Copilot incorrectly expected two missing values in the `name` column of
+the test fixture.
+
+Manual inspection showed that only one row had a missing `name`.
+
+The expected count was corrected from `2` to `1`.
+
+### Human Review and Decision
+
+**Accepted with corrections to two AI-generated tests.**
+
+No production code was changed because the failures were caused by
+incorrect test expectations.
+
+This demonstrated that AI-generated tests must also be reviewed and
+validated rather than accepted automatically.
+
+### Final Test Result
+
+After correcting the two AI-generated test expectations, the full test suite
+was executed again with:
+
+`python3 -m pytest -v`
+
+Final result:
+
+- 30 tests collected;
+- 30 tests passed;
+- 0 tests failed.
+
+The production code did not require changes during this correction cycle.
+
+The final green test run confirmed the behavior of the loader, validator,
+and report components across happy paths, negative paths, and edge cases.
