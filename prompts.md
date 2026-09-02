@@ -748,3 +748,84 @@ Expected final result:
 - 31 tests collected;
 - 31 tests passed;
 - 0 tests failed.
+
+---
+
+## Prompt 8 — README Documentation
+
+**AI Tool:** GitHub Copilot in VS Code
+
+**Goal:** Update the project documentation before creating the Pull Request.
+
+### Prompt
+
+Review the completed project and update only `README.md`.
+
+The implementation and tests are complete. Do not modify any Python files.
+
+Keep the existing project goal, User Story, Acceptance Criteria, and Out of Scope
+sections, but improve the README so that a new user can understand and run the
+project.
+
+Add the following sections:
+
+1. Overview
+2. Features
+3. Project Structure
+4. Requirements
+5. Installation
+6. Usage
+7. Example output
+8. Running tests
+9. AI-Assisted Development
+10. Future Improvements
+
+Requirements:
+
+- explain that this is a small Python CLI for basic CSV data quality validation;
+- document the `--key` argument;
+- document the optional `--required` argument;
+- include an example using `data/customers_good.csv`;
+- include an example using `data/customers_bad.csv`;
+- include the command `python3 -m pip install -r requirements.txt`;
+- include the command `python3 -m pytest -v`;
+- mention that the current automated test suite contains 31 passing tests;
+- explain that ChatGPT was used for requirements/planning and GitHub Copilot
+  was used for implementation, tests, documentation, and code review;
+- mention `prompts.md` as the record of the AI-assisted workflow;
+- keep the README concise and professional;
+- do not invent features that are not implemented;
+- do not add badges, CI/CD, Docker, database integration, or new dependencies.
+
+Before editing, briefly explain the documentation plan.
+
+### AI Response Summary
+
+GitHub Copilot expanded `README.md` into complete user-facing project
+documentation.
+
+The documentation includes:
+
+- project overview and features;
+- project structure;
+- installation instructions;
+- CLI usage and arguments;
+- examples for good and bad datasets;
+- example validation output;
+- automated test instructions;
+- AI-assisted development information;
+- future improvement ideas;
+- the original User Story, Acceptance Criteria, and Out of Scope sections.
+
+### Human Review and Decision
+
+**Accepted with a small documentation modification.**
+
+The generated documentation correctly described the implemented CLI and did
+not introduce unsupported functionality.
+
+The Future Improvements section was refined using findings from the earlier
+AI code review. Deferred review recommendations were documented as possible
+future work instead of being added to the current feature.
+
+No production code was changed during this documentation stage.
