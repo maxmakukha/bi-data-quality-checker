@@ -605,3 +605,146 @@ The production code did not require changes during this correction cycle.
 
 The final green test run confirmed the behavior of the loader, validator,
 and report components across happy paths, negative paths, and edge cases.
+
+---
+
+## Prompt 7 — AI Code Review
+
+**AI Tool:** GitHub Copilot in VS Code
+
+**Goal:** Review the completed Data Quality Validation feature before creating a Pull Request.
+
+### Prompt
+
+Review the complete implementation of the Data Quality Validation feature.
+
+Review these files:
+
+- `main.py`
+- `src/loader.py`
+- `src/validator.py`
+- `src/report.py`
+- `tests/test_loader.py`
+- `tests/test_validator.py`
+- `tests/test_report.py`
+- `README.md`
+
+Do not modify any files yet.
+
+Perform a code review and check:
+
+1. whether the implementation satisfies the acceptance criteria in README.md;
+2. correctness and possible bugs;
+3. edge cases;
+4. error handling;
+5. unnecessary complexity;
+6. separation of responsibilities between loader, validator, report, and CLI;
+7. readability and maintainability;
+8. security concerns relevant to this small CLI application;
+9. whether the automated tests sufficiently cover the implemented behavior;
+10. whether there is any functionality outside the intended project scope.
+
+For every finding, classify it as:
+
+- Critical
+- Important
+- Minor
+- No issue
+
+For suggested changes, explain why the change is needed.
+
+Do not rewrite the project and do not introduce new features or dependencies.
+
+At the end, provide a recommendation:
+
+- Ready for PR
+- Ready for PR with minor changes
+- Not ready for PR
+
+### AI Review Summary
+
+GitHub Copilot reviewed the complete feature and classified the project as:
+
+**Ready for PR with minor changes.**
+
+The review confirmed that:
+
+- the README acceptance criteria are satisfied;
+- no critical correctness issues were found;
+- validator behavior is correct;
+- responsibilities are clearly separated between loader, validator, report, and CLI;
+- the code is readable and maintainable;
+- the core functionality remains within the intended project scope;
+- automated tests provide good coverage of the core behavior.
+
+### Findings and Human Decisions
+
+**1. Directory path handling — Accepted**
+
+Copilot identified that `os.path.exists()` also returns true for directories.
+Passing a directory instead of a CSV file could therefore result in an
+uncaught `IsADirectoryError`.
+
+Decision: accept this finding and add a small validation improvement so the
+user receives a clear error message.
+
+**2. Malformed CSV / csv.Error handling — Rejected for current scope**
+
+Copilot suggested additional handling for malformed CSV parsing errors.
+
+Decision: do not implement this in the current feature because advanced
+malformed-file handling was not part of the original acceptance criteria and
+would expand the intended scope.
+
+This can be considered a future enhancement.
+
+**3. Additional CLI and error-path tests — Deferred**
+
+Copilot suggested additional integration tests for CLI exit codes and parsing
+errors.
+
+Decision: defer these tests. The current suite already covers the core loader,
+validator, and report behavior, while the CLI was manually verified
+end-to-end.
+
+**4. Duplicate normalization enhancements — Deferred**
+
+Case normalization and Unicode normalization could be useful for some
+datasets, but they are not required by the current feature.
+
+**5. Validator performance optimization — Rejected for current scope**
+
+The current implementation favors readability over optimization for very
+large files.
+
+This is appropriate for the intentionally small CLI project.
+
+**6. Type hints — Deferred**
+
+Type hints could improve maintainability but are not necessary for the
+current feature.
+
+### Human Review Decision
+
+The AI review was not applied automatically.
+
+Each recommendation was evaluated against the original project scope.
+
+One small robustness improvement was accepted, while the remaining
+recommendations were rejected or deferred to avoid unnecessary scope
+expansion.
+
+### Accepted Review Change Verification
+
+The accepted directory-path handling improvement was implemented in `loader.py`.
+
+A new automated test was added to verify that passing a directory path raises
+a clear `ValueError`.
+
+The complete test suite was executed again after the change.
+
+Expected final result:
+
+- 31 tests collected;
+- 31 tests passed;
+- 0 tests failed.

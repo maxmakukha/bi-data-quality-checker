@@ -16,7 +16,8 @@ def load_csv(file_path):
     """
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"CSV file not found: {file_path}")
-
+    if not os.path.isfile(file_path):
+        raise ValueError(f"Path is not a file: {file_path}")
     with open(file_path, newline="", encoding="utf-8-sig") as csv_file:
         reader = csv.DictReader(csv_file)
         columns = reader.fieldnames or []

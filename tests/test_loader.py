@@ -58,6 +58,13 @@ def test_missing_file_raises_error():
         load_csv('/nonexistent/path/file.csv')
 
 
+def test_directory_path_raises_value_error():
+    """Verify passing a directory path raises ValueError."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        with pytest.raises(ValueError, match="not a file"):
+            load_csv(tmpdir)
+
+
 def test_empty_csv():
     """Verify that an empty CSV file (headers only) returns empty rows."""
     content = "id,name,email\n"
